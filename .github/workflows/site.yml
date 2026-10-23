@@ -1,0 +1,26 @@
+name: Build site
+on: [push, workflow_dispatch]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: github-pages
+    steps:
+      - uses: actions/checkout@v4
+      - name: Convert .tex to .html
+        run: |
+          sudo apt-get update && sudo apt-get install -y pandoc
+          shopt -s nullglob
+          for f in *.tex; do
+            pandoc "$f" -s --mathjax --shift-heading-level-by=1 \
+              --css https://latex.vercel.app/style.css -o "${f%.tex}.html"
+          done
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: .
+      - uses: actions/deploy-pages@v4
