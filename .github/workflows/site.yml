@@ -18,7 +18,7 @@ jobs:
           shopt -s nullglob
           for f in *.tex; do
             pandoc "$f" -s --mathjax --shift-heading-level-by=1 \
-              --css https://latex.vercel.app/style.css -o "${f%.tex}.html"
+              --css style.css -o "${f%.tex}.html"
           done
       - uses: actions/upload-pages-artifact@v3
         with:
